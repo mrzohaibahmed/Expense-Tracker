@@ -1,0 +1,1 @@
+export default function LoadingCategories() { return <main className="mx-auto max-w-6xl px-4 py-10"><div className="h-8 w-44 animate-pulse rounded bg-stone-200" /><div className="mt-7 h-64 animate-pulse rounded-3xl bg-stone-100" /></main>; }

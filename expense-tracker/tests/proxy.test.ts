@@ -5,6 +5,7 @@ import { config } from "../proxy";
 describe("authentication proxy matcher", () => {
   it("runs for application routes", () => {
     expect(unstable_doesMiddlewareMatch({ config, nextConfig: {}, url: "/dashboard" })).toBe(true);
+    expect(unstable_doesMiddlewareMatch({ config, nextConfig: {}, url: "/reports" })).toBe(true);
     expect(unstable_doesMiddlewareMatch({ config, nextConfig: {}, url: "/login" })).toBe(true);
   });
 

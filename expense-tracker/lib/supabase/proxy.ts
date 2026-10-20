@@ -1,12 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import type { Database } from "./database.types";
 
 const CACHE_HEADERS = ["cache-control", "expires", "pragma"] as const;
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
+  const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
@@ -42,7 +43,8 @@ export async function updateSession(request: NextRequest) {
   // and refreshes near-expiry sessions when needed.
   const { data } = await supabase.auth.getClaims();
 
-  if (!data?.claims && request.nextUrl.pathname.startsWith("/dashboard")) {
+  const protectedPaths = ["/dashboard", "/accounts", "/categories", "/transactions", "/transfers", "/reports"];
+  if (!data?.claims && protectedPaths.some((path) => request.nextUrl.pathname === path || request.nextUrl.pathname.startsWith(`${path}/`))) {
     const redirectResponse = NextResponse.redirect(new URL("/login", request.url));
 
     supabaseResponse.cookies.getAll().forEach((cookie) => {
